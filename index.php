@@ -89,9 +89,10 @@ function process_file (string $installxml, array $options) {
         $foreignkeys = get_foreign_keys($table);
         foreach ($foreignkeys as $fkey) {
             $reftable = $fkey->getReftable();
+            $fields = $fkey->getFields();
             $reffields = $fkey->getReffields();
             if (!empty($reffields) && sizeof($reffields) > 0) {
-                $output .= "$reftable ||--o{ $tablename : {$reffields[0]}\n";
+                $output .= "$reftable ||--o{ $tablename : \"$fields[0] -> {$reffields[0]}\"\n";
             }
         }
         $output .= $tablename;
