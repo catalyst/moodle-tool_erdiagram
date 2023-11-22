@@ -34,52 +34,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/admin/sqlgenerator.php');
 $markup = optional_param('markup', '', PARAM_TEXT);
 
-class tool_erdiagram_form extends moodleform {
-    protected $mermaid;
-
-    protected function definition() {
-        global $CFG;
-        $mform = $this->_form;
-        $mform->addElement('text', 'pluginfolder', get_string('pluginfolder', 'tool_erdiagram'));
-
-        $mform->setDefault('pluginfolder', 'mod/book');
-        $mform->addHelpButton('pluginfolder', 'pluginfolder', 'tool_erdiagram');
-        $mform->setType('pluginfolder', PARAM_TEXT);
-
-        $mform->addElement('textarea', 'markup', 'Output', ['rows' => 10, 'cols' => 80]);
-        $mform->setType('markup', PARAM_TEXT);
-
-        $mform->addElement('advcheckbox', 'fieldnames', 'Field Names');
-        $mform->setType('fieldnames', PARAM_BOOL);
-
-        $mform->addElement('static', 'mermark', 'Rendered diagram');
-        $mform->addElement('submit', 'submitbutton', get_string('submit'));
-    }
-    /**
-     * Update fields in the form after it has been constructed.
-     *
-     * @param string $data
-     * @return void
-     */
-    public function set_data($data) {
-        $this->_form->getElement('markup')->setValue($data);
-        $mermark = "
-            <script type='module'>
-                import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-                mermaid.initialize({ startOnLoad: true });
-        </script>
-        <pre class='mermaid'>
-            $data
-            </pre>";
-        $this->_form->getElement('mermark')->setValue($mermark);
-    }
-    public function data_preprocessing($merdata) {
-        $this->mermaid = $merdata;
-    }
-
-
-}
-$mform = new tool_erdiagram_form(new moodle_url('/admin/tool/erdiagram/'));
+$mform = new tool_erdiagram\form\component(new moodle_url('/admin/tool/erdiagram/'));
 if ($data = $mform->get_data()) {
     $pluginfolder = $data->pluginfolder ?? '';
     if (isset($data->submitbutton)) {
