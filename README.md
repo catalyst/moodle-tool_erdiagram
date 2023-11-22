@@ -1,6 +1,6 @@
 ### Moodle ER Diagram Generator
 
-A proof of concept local plugin created as part of the "Catathon" day
+A proof of concept admin tool plugin created as part of the "Catathon" day
 at Catalyst EU (https://www.catalyst-eu.net/). 2nd November 2023
 
 Generate Mermaid ER (Entity Relationship) diagram markdown from plugin install.xml files

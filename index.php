@@ -76,7 +76,7 @@ class tool_erdiagram_form extends moodleform {
 
 
 }
-$mform = new tool_erdiagram_form(new moodle_url('/local/erdiagram/'));
+$mform = new tool_erdiagram_form(new moodle_url('/admin/tool/erdiagram/'));
 if ($data = $mform->get_data()) {
     $pluginfolder = $data->pluginfolder ?? '';
     if (isset($data->submitbutton)) {
