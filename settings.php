@@ -18,7 +18,8 @@
  * Link to ER diagram
  *
  * @package    tool_erdiagram
- * @copyright  2003 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @author     Brendan Heywoods (brendan@catalyst-au.net)
+ * @copyright  2023 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

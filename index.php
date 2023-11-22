@@ -26,7 +26,9 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir.'/adminlib.php');
 
+admin_externalpage_setup('toolerdiagram');
 
 require_once($CFG->libdir . '/adminlib.php');
 $PAGE->set_context(context_system::instance());
