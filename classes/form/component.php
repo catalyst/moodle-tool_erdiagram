@@ -37,7 +37,6 @@ class component extends moodleform {
         $mform->addElement('advcheckbox', 'fieldnames', 'Field Names');
         $mform->setType('fieldnames', PARAM_BOOL);
 
-        $mform->addElement('static', 'mermark', 'Rendered diagram');
         $mform->addElement('submit', 'submitbutton', get_string('submit'));
     }
     /**
@@ -48,14 +47,6 @@ class component extends moodleform {
      */
     public function set_data($data) {
         $this->_form->getElement('markup')->setValue($data);
-        $mermark = "
-            <script type='module'>
-                import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-                mermaid.initialize({ startOnLoad: true });
-        </script>
-        <pre class='mermaid'>
-            $data
-            </pre>";
         $this->_form->getElement('mermark')->setValue($mermark);
     }
     public function data_preprocessing($merdata) {

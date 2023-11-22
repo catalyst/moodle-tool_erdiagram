@@ -34,24 +34,37 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/admin/sqlgenerator.php');
 $markup = optional_param('markup', '', PARAM_TEXT);
 
+echo $OUTPUT->header();
+
 $mform = new tool_erdiagram\form\component(new moodle_url('/admin/tool/erdiagram/'));
+$mform->display();
+
 if ($data = $mform->get_data()) {
     $pluginfolder = $data->pluginfolder ?? '';
-    if (isset($data->submitbutton)) {
-        if (isset($data->pluginfolder) && $data->pluginfolder > "") {
-            $installxml = $CFG->dirroot.'/'.$data->pluginfolder .'/db/install.xml';
-            if (file_exists($installxml)) {
-                $options['fieldnames'] = $data->fieldnames;
-                $output = process_file($installxml, $options);
-                $mform->set_data($output);
+    if (isset($data->submitbutton) && $pluginfolder > '') {
+        $installxml = "$CFG->dirroot/$pluginfolder/db/install.xml";
+        if (file_exists($installxml)) {
+            $options['fieldnames'] = $data->fieldnames;
+            $output = process_file($installxml, $options);
+            echo <<<EOF
+<script type='module'>
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true });
+</script>
+<pre class='mermaid'>
+$output
+</pre>
+EOF;
 
-            } else {
-                $msg = 'File not found';
-                \core\notification::add($msg, \core\notification::WARNING);
-            }
+        } else {
+            $msg = 'File not found';
+            \core\notification::add($msg, \core\notification::WARNING);
         }
     }
 }
+
+echo $OUTPUT->footer();
+
 /**
  * Extract data from the xml file and convert it to
  * mermaid er diagram markdown.
@@ -61,7 +74,7 @@ if ($data = $mform->get_data()) {
  * @param  array $options //array containing output option flags
  * @return string $output //mermaid markdown @TODO change variable name
  */
-function  process_file (string $installxml, array $options) {
+function process_file (string $installxml, array $options) {
     $output = "erDiagram\n";
 
     $xmldbfile = new xmldb_file($installxml);
@@ -96,10 +109,6 @@ function  process_file (string $installxml, array $options) {
     }
     return $output;
 }
-
-echo $OUTPUT->header();
-$mform->display();
-echo $OUTPUT->footer();
 
 /**
  * Any key that is not a primary key is assumed to be
