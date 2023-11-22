@@ -17,7 +17,7 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     local_erdiagram
+ * @package     tool_erdiagram
  * @category    string
  * @author      Marcus Green
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_erdiagram';
+$plugin->component = 'tool_erdiagram';
 $plugin->release = 2023101300;
 $plugin->version = 2023101300;
 $plugin->requires = 2022041904; // Requires 4.0.

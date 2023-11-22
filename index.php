@@ -17,7 +17,7 @@
 /**
  * Create ER diagram Mermaid file
  *
- * @package    local_erdiagram
+ * @package    tool_erdiagram
  * @author     Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -34,15 +34,15 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/admin/sqlgenerator.php');
 $markup = optional_param('markup', '', PARAM_TEXT);
 
-class local_erdiagram_form extends moodleform {
+class tool_erdiagram_form extends moodleform {
     protected $mermaid;
 
     protected function definition() {
         global $CFG;
         $mform = $this->_form;
-        $mform->addElement('text', 'pluginfolder', get_string('pluginfolder', 'local_erdiagram'));
+        $mform->addElement('text', 'pluginfolder', get_string('pluginfolder', 'tool_erdiagram'));
         $mform->setDefault('pluginfolder', 'mod/book');
-        $mform->addHelpButton('pluginfolder', 'pluginfolder', 'local_erdiagram');
+        $mform->addHelpButton('pluginfolder', 'pluginfolder', 'tool_erdiagram');
         $mform->setType('pluginfolder', PARAM_TEXT);
         $mform->addElement('textarea', 'markup', 'Output', array('rows' => 10, 'cols' => 80));
         $mform->setType('markup', PARAM_TEXT);
@@ -76,7 +76,7 @@ class local_erdiagram_form extends moodleform {
 
 
 }
-$mform = new local_erdiagram_form(new moodle_url('/local/erdiagram/'));
+$mform = new tool_erdiagram_form(new moodle_url('/local/erdiagram/'));
 if ($data = $mform->get_data()) {
     $pluginfolder = $data->pluginfolder ?? '';
     if (isset($data->submitbutton)) {
