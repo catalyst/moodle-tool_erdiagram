@@ -41,11 +41,14 @@ class tool_erdiagram_form extends moodleform {
         global $CFG;
         $mform = $this->_form;
         $mform->addElement('text', 'pluginfolder', get_string('pluginfolder', 'tool_erdiagram'));
+
         $mform->setDefault('pluginfolder', 'mod/book');
         $mform->addHelpButton('pluginfolder', 'pluginfolder', 'tool_erdiagram');
         $mform->setType('pluginfolder', PARAM_TEXT);
-        $mform->addElement('textarea', 'markup', 'Output', array('rows' => 10, 'cols' => 80));
+
+        $mform->addElement('textarea', 'markup', 'Output', ['rows' => 10, 'cols' => 80]);
         $mform->setType('markup', PARAM_TEXT);
+
         $mform->addElement('advcheckbox', 'fieldnames', 'Field Names');
         $mform->setType('fieldnames', PARAM_BOOL);
 
@@ -104,7 +107,7 @@ if ($data = $mform->get_data()) {
  * @return string $output //mermaid markdown @TODO change variable name
  */
 function  process_file (string $installxml, array $options) {
-    $output = 'erDiagram'.PHP_EOL;
+    $output = "erDiagram\n";
 
     $xmldbfile = new xmldb_file($installxml);
     $xmldbfile->loadXMLStructure();
@@ -115,22 +118,26 @@ function  process_file (string $installxml, array $options) {
         $tablename = $table->getName();
         $foreignkeys = get_foreign_keys($table);
         foreach ($foreignkeys as $fkey) {
-              $output .= $fkey->getReftable().'  ||--o{ '.$tablename.' : '. $fkey->getReffields()[0]. PHP_EOL;
-        }
-        $output .= ''.$tablename;
-        $output .= ' {'.PHP_EOL;
-        foreach ($table->getFields() as $field) {
-            if ($options['fieldnames']) {
-                $output .= '    '.get_field_type($field->getType());
-                $output .= ' '.$field->getName();
-                $comment = $field->getComment();
-                if ($comment) {
-                    $output .= '"'.$comment. '"';
-                }
-                $output .= PHP_EOL;
+            $reftable = $fkey->getReftable();
+            $reffields = $fkey->getReffields();
+            if (!empty($reffields) && sizeof($reffields) > 0) {
+                $output .= "$reftable ||--o{ $tablename : {$reffields[0]}\n";
             }
         }
-        $output .= '}'.PHP_EOL;
+        $output .= $tablename;
+        $output .= " {\n";
+        foreach ($table->getFields() as $field) {
+            if ($options['fieldnames']) {
+                $output .= '    ' . get_field_type($field->getType());
+                $output .= ' ' . $field->getName();
+                $comment = $field->getComment();
+                if ($comment) {
+                    $output .= '"' . $comment . '"';
+                }
+                $output .= "\n";
+            }
+        }
+        $output .= "}\n";
     }
     return $output;
 }
