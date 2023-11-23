@@ -20,6 +20,7 @@
  * @package     tool_erdiagram
  * @category    string
  * @author      Marcus Green
+ * @copyright   Catalyst IT 2023
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

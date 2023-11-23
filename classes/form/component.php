@@ -19,9 +19,21 @@ namespace tool_erdiagram\form;
 
 use moodleform;
 
+/**
+ * Plugin strings are defined here.
+ *
+ * @package     tool_erdiagram
+ * @category    string
+ * @author      Marcus Green
+ * @copyright   Catalyst IT 2023
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class component extends moodleform {
     protected $mermaid;
 
+    /**
+     *
+     */
     protected function definition() {
         global $CFG;
         $mform = $this->_form;
@@ -36,19 +48,5 @@ class component extends moodleform {
 
         $mform->addElement('submit', 'submitbutton', get_string('submit'));
     }
-    /**
-     * Update fields in the form after it has been constructed.
-     *
-     * @param string $data
-     * @return void
-     */
-    public function set_data($data) {
-        $this->_form->getElement('markup')->setValue($data);
-        $this->_form->getElement('mermark')->setValue($mermark);
-    }
-    public function data_preprocessing($merdata) {
-        $this->mermaid = $merdata;
-    }
-
 
 }
