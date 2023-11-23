@@ -20,8 +20,6 @@
  * @package    tool_erdiagram
  * @author     Marcus Green
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- *
  */
 
 require_once(__DIR__ . '/../../../config.php');
@@ -53,9 +51,26 @@ if ($data = $mform->get_data()) {
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 mermaid.initialize({ startOnLoad: true });
 </script>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="diagram-tab" data-toggle="tab" href="#diagram" role="tab" aria-controls="diagram" aria-selected="true">Diagram</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="source-tab" data-toggle="tab" href="#source" role="tab" aria-controls="source" aria-selected="false">Source</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="diagram" role="tabpanel" aria-labelledby="diagram-tab">
 <pre class='mermaid'>
 $output
 </pre>
+  </div>
+  <div class="tab-pane fade"             id="source" role="tabpanel" aria-labelledby="source-tab">
+<pre>
+$output
+</pre>
+  </div>
+</div>
 EOF;
 
         } else {

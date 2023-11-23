@@ -31,9 +31,6 @@ class component extends moodleform {
         $mform->addHelpButton('pluginfolder', 'pluginfolder', 'tool_erdiagram');
         $mform->setType('pluginfolder', PARAM_TEXT);
 
-        $mform->addElement('textarea', 'markup', 'Output', ['rows' => 10, 'cols' => 80]);
-        $mform->setType('markup', PARAM_TEXT);
-
         $mform->addElement('advcheckbox', 'fieldnames', 'Field Names');
         $mform->setType('fieldnames', PARAM_BOOL);
 
