@@ -19,6 +19,7 @@
  *
  * @package    tool_erdiagram
  * @author     Marcus Green
+ * @copyright  Catalyst IT 2023
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -53,10 +54,12 @@ mermaid.initialize({ startOnLoad: true });
 </script>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="diagram-tab" data-toggle="tab" href="#diagram" role="tab" aria-controls="diagram" aria-selected="true">Diagram</a>
+    <a class="nav-link active" id="diagram-tab" data-toggle="tab" href="#diagram"
+        role="tab" aria-controls="diagram" aria-selected="true">Diagram</a>
   </li>
   <li class="nav-item" role="presentation">
-    <a class="nav-link" id="source-tab" data-toggle="tab" href="#source" role="tab" aria-controls="source" aria-selected="false">Source</a>
+    <a class="nav-link" id="source-tab" data-toggle="tab" href="#source"
+        role="tab" aria-controls="source" aria-selected="false">Source</a>
   </li>
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -106,7 +109,7 @@ function process_file (string $installxml, array $options) {
             $reftable = $fkey->getReftable();
             $fields = $fkey->getFields();
             $reffields = $fkey->getReffields();
-            if (!empty($reffields) && sizeof($reffields) > 0) {
+            if (!empty($reffields) && count($reffields) > 0) {
                 $output .= "$reftable ||--o{ $tablename : \"$fields[0] -> {$reffields[0]}\"\n";
             }
         }
