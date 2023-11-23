@@ -1,3 +1,5 @@
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-tool_erdiagram/ci.yml?branch=master&label=ci)
+
 ### Moodle ER Diagram Generator
 
 A proof of concept admin tool plugin created as part of the "Catathon" day
