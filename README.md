@@ -12,10 +12,13 @@ The db/install.xml file will be opened and the xml converted to mermaid markdown
 There is a checkbox to allow inclusion of Fields, type and comment for a more detailed/cluttered view.
 
 A preview is displayed and the markup can be copied for further viewing and manipulation at
+
 https://mermaid.live/
 
 See also
-https://mermaid.js.org/
-https://github.com/mermaid-js/mermaid
-https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams
 
+https://mermaid.js.org/
+
+https://github.com/mermaid-js/mermaid
+
+https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams
