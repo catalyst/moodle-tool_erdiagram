@@ -42,6 +42,7 @@ class diagram {
 digraph g {
 
     fontname="Helvetica,Arial,sans-serif"
+    nodesep=1
     node [
         shape=record,
         fontsize=9,
@@ -122,7 +123,11 @@ EOF;
                     // Only show the link if the referenced table is also in the diagram.
                     if (in_array($reftable, $componenttables) ) {
                         if ($options['fieldnames']) {
-                            $output .= "    $tablename:out{$fields[0]} -> $reftable:in{$reffields[0]};\n";
+                            if ($tablename == $reftable) {
+                                $output .= "    $tablename:in{$fields[0]}:w -> $reftable:in{$reffields[0]}:w [minlen=1];\n";
+                            } else {
+                                $output .= "    $tablename:out{$fields[0]} -> $reftable:in{$reffields[0]};\n";
+                            }
                         } else {
                             $output .= "    $tablename -> $reftable;\n";
                         }
