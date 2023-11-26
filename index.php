@@ -25,15 +25,12 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/formslib.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 admin_externalpage_setup('toolerdiagram');
 
-require_once($CFG->libdir . '/adminlib.php');
 $PAGE->set_context(context_system::instance());
-
 $PAGE->set_url('/admin/sqlgenerator.php');
-$markup = optional_param('markup', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
@@ -46,35 +43,13 @@ if ($data = $mform->get_data()) {
         $installxml = "$CFG->dirroot/$pluginfolder/db/install.xml";
         if (file_exists($installxml)) {
             $options['fieldnames'] = $data->fieldnames;
-            $output = process_file($installxml, $options);
-            echo <<<EOF
-<script type='module'>
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-mermaid.initialize({ startOnLoad: true });
-</script>
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="diagram-tab" data-toggle="tab" href="#diagram"
-        role="tab" aria-controls="diagram" aria-selected="true">Diagram</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="source-tab" data-toggle="tab" href="#source"
-        role="tab" aria-controls="source" aria-selected="false">Source</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="diagram" role="tabpanel" aria-labelledby="diagram-tab">
-<pre class='mermaid'>
-$output
-</pre>
-  </div>
-  <div class="tab-pane fade"             id="source" role="tabpanel" aria-labelledby="source-tab">
-<pre>
-$output
-</pre>
-  </div>
-</div>
-EOF;
+            $diagram = new tool_erdiagram\diagram();
+            $output = $diagram->process_file($installxml, $options);
+
+            $data = new stdClass();
+            $data->source = $output;
+            $data->html = tool_erdiagram\dot::generate($output);
+            echo $OUTPUT->render_from_template('tool_erdiagram/tabs', $data);
 
         } else {
             $msg = 'File not found';
@@ -85,102 +60,3 @@ EOF;
 
 echo $OUTPUT->footer();
 
-/**
- * Extract data from the xml file and convert it to
- * mermaid er diagram markdown.
- * https://mermaid.js.org/config/Tutorials.html
- *
- * @param  string $installxml //path to dbmxl file i.e. mod/label/db/install.xml
- * @param  array $options //array containing output option flags
- * @return string $output //mermaid markdown @TODO change variable name
- */
-function process_file (string $installxml, array $options) {
-    $output = "erDiagram\n";
-
-    $xmldbfile = new xmldb_file($installxml);
-    $xmldbfile->loadXMLStructure();
-
-    $xmldbstructure = $xmldbfile->getStructure();
-    $tables = $xmldbstructure->getTables();
-    foreach ($tables as $table) {
-        $tablename = $table->getName();
-        $foreignkeys = get_foreign_keys($table);
-        foreach ($foreignkeys as $fkey) {
-            $reftable = $fkey->getReftable();
-            $fields = $fkey->getFields();
-            $reffields = $fkey->getReffields();
-            if (!empty($reffields) && count($reffields) > 0) {
-                $output .= "$reftable ||--o{ $tablename : \"$fields[0] -> {$reffields[0]}\"\n";
-            }
-        }
-        $output .= $tablename;
-        $output .= " {\n";
-        foreach ($table->getFields() as $field) {
-            if ($options['fieldnames']) {
-                $output .= '    ' . get_field_type($field->getType());
-                $output .= ' ' . $field->getName();
-                $comment = $field->getComment();
-                if ($comment) {
-                    $output .= '"' . $comment . '"';
-                }
-                $output .= "\n";
-            }
-        }
-        $output .= "}\n";
-    }
-    return $output;
-}
-
-/**
- * Any key that is not a primary key is assumed to be
- * a PK/FK relationship.
- *
- * @param xmldb_table $table
- * @return array
- */
-function get_foreign_keys(xmldb_table $table) {
-    $keys = $table->getKeys();
-    $foreignkeys = [];
-    foreach ($keys as $key) {
-        if ($key->getName() !== "primary") {
-            $foreignkeys[] = $key;
-        }
-    }
-    return $foreignkeys;
-}
-
-/**
- * Inspired by the function getTypeSQL found at
- * lib/ddl/sqlite_sql_generator.php
- * The "correct" datatypes may depend on what database
- * you are familiar with
- * @param int $xmldbtype Constant of field types
- * @return void
- */
-function get_field_type($fieldtype) {
-
-    switch ($fieldtype) {
-        case XMLDB_TYPE_INTEGER:
-            $typename = 'INTEGER';
-            break;
-        case XMLDB_TYPE_NUMBER:
-            $typename = 'INTEGER';
-            break;
-        case XMLDB_TYPE_FLOAT:
-            $typename = 'FLOAT';
-            break;
-        case XMLDB_TYPE_CHAR:
-            $typename = 'VARCHAR';
-            break;
-        case XMLDB_TYPE_BINARY:
-            $typename = 'BLOB';
-            break;
-        case XMLDB_TYPE_DATETIME:
-            $typename = 'DATETIME';
-        default:
-        case XMLDB_TYPE_TEXT:
-            $typename = 'TEXT';
-            break;
-    }
-    return $typename;
-}
