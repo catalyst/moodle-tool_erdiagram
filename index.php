@@ -48,6 +48,7 @@ if ($data = $mform->get_data()) {
 
             $data = new stdClass();
             $data->source = $output;
+            $data->html = tool_erdiagram\dot::generate($output);
             echo $OUTPUT->render_from_template('tool_erdiagram/tabs', $data);
 
         } else {
