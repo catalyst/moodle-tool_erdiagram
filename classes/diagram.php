@@ -84,19 +84,16 @@ EOF;
                 if ($options['fieldnames']) {
                     $fieldtype = $this->get_field_type($field->getType());
                     $fieldname = $field->getName();
-                    $fields .= sprintf("            <tr><td %-25s  align=\"left\">%-15s</td><td %-25s  align=\"left\">%-25s</td></tr>\n",
+                    $fields .=
+                        sprintf("            <tr><td %-30s align=\"left\">%-10s</td><td %-31s align=\"left\">%-26s</td></tr>\n",
                         "port=\"in$fieldname\"",
                         $fieldtype,
                         "port=\"out$fieldname\"",
                         $fieldname);
 
-                    $comment = $field->getComment();
-                    if ($comment) {
-                        // $output .= '"' . $comment . '"';
-                    }
                 }
             }
-$output .= <<<EOF
+             $output .= <<<EOF
 
     $tablename [
         shape=none,
@@ -198,17 +195,6 @@ EOF;
         $output .= "}\n";
         return $output;
     }
-
-    /**
-     * Return do script for a single table
-     * @return string dot script
-     */
-    private function get_dot_table($fields) {
-        $output = '';
-
-        return $output;
-    }
-
 
     /**
      * Any key that is not a primary key is assumed to be

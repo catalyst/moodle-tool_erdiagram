@@ -41,20 +41,6 @@ class dot {
     public static function generate(string $dotscript, ?string $type = 'svg') {
         global $CFG, $OUTPUT;
 
-        // $cache = \cache::make('tool_erdiagram', 'dot');
-        // $hash = hash('sha256', $dotscript . $type);
-        //
-        // if ($data = $cache->get($hash)) {
-        //     return $data;
-        // }
-
-        // if (!helper::is_graphviz_dot_installed()) {
-        //     return $OUTPUT->render(
-        //         new \pix_icon(helper::GRAPHVIZ_ALT_ICON,
-        //             get_string('preview_unavailable', 'tool_dataflows'))
-        //     ) . get_string('preview_unavailable', 'tool_dataflows');
-        // }
-
         $descriptorspec = [
             // The stdin is a pipe that the child will read from.
             0 => ['pipe', 'r'],
@@ -84,8 +70,8 @@ class dot {
             if (!empty($err)) {
                 $error = "failed to execute cmd: \"$cmd\". stderr: `$err`<br><pre>";
                 $lines = explode("\n", $dotscript);
-                for ($c=0; $c < sizeof($lines); $c++) {
-                    $error .= sprintf('%3d', $c+1) . ' ' . s($lines[$c]) . "\n";
+                for ($c = 0; $c < count($lines); $c++) {
+                    $error .= sprintf('%3d', $c + 1) . ' ' . s($lines[$c]) . "\n";
                 }
                 $error .= "</pre>";
                 return $error;
@@ -94,7 +80,6 @@ class dot {
             fclose($stderr);
             fclose($stdout);
             proc_close($process);
-            // $cache->set($hash, $output);
             return $output;
         }
 
