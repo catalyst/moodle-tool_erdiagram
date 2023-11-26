@@ -1,4 +1,6 @@
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-tool_erdiagram/ci.yml?branch=master&label=ci)
+<a href="https://github.com/catalyst/moodle-tool_erdiagram/actions/workflows/ci.yml?query=branch%3Amaster">
+<img src="https://github.com/catalyst/moodle-tool_erdiagram/workflows/ci/badge.svg?branch=master">
+</a>
 
 ### Moodle ER Diagram Generator
 
