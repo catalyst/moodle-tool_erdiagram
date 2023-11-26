@@ -44,7 +44,7 @@ if ($data = $mform->get_data()) {
         if (file_exists($installxml)) {
             $options['fieldnames'] = $data->fieldnames;
             $diagram = new tool_erdiagram\diagram();
-            $output = $diagram->process_file($installxml, $options);
+            $output = $diagram->process_file($installxml, $pluginfolder, $options);
 
             $data = new stdClass();
             $data->source = $output;

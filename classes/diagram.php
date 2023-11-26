@@ -36,7 +36,14 @@ class diagram {
      * @param  array $options //array containing output option flags
      * @return string $output //mermaid markdown @TODO change variable name
      */
-    public function process_file (string $installxml, array $options) {
+    public function process_file (string $installxml, string $path, array $options) {
+
+        // TODO need to properly map from a path to a component.
+        // This only works for /mod/foobar/ but not other plugin types.
+        $prefix = '';
+        if (substr($path, 0, 4) === 'mod/') {
+            $prefix = substr($path, 4) . '_';
+        }
 
         $output = <<<EOF
 digraph component {
@@ -161,15 +168,32 @@ EOF;
                 }
 
                 if (!empty($componenttables[$fieldname])) {
+                    // Match column 'book' -> table 'book:id'.
                     $reftable = $fieldname;
+
+                } elseif (!empty($componenttables[$prefix . '_' . $fieldname])) {
+                    // Match column 'discussion' -> table 'forum_discussion:id'.
+                    $reftable = $prefix . '_' . $fieldname;
+
                 } elseif ($fieldname !== 'id' && substr($fieldname, -2) == 'id') {
+                    // Match column 'bookid' -> table 'book:id'.
                     if (in_array(substr($fieldname, 0, -2), $componenttables)) {
                         $reftable = substr($fieldname, 0, -2);
+                    }
+
+                    // Match column 'bookid' -> table 'books:id'.
+                    if (in_array(substr($fieldname, 0, -2) . 's', $componenttables)) {
+                        $reftable = substr($fieldname, 0, -2) . 's';
+                    }
+
+                    // Match column 'postid' -> table 'forum_posts:id'.
+                    if (in_array($prefix . substr($fieldname, 0, -2) . 's', $componenttables)) {
+                        $reftable = $prefix . substr($fieldname, 0, -2) . 's';
                     }
                 }
 
                 if ($reftable) {
-                    $output .= "    $tablename:out$fieldname -> $reftable:inid[label=\"implied\", style=\"dotted\", fontsize=9];\n";
+                    $output .= "    $tablename:out$fieldname -> $reftable:inid[label=\"implied\", style=\"dashed\", color=\"#666666\" fontsize=9];\n";
                 }
             }
         }
