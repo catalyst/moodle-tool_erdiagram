@@ -25,15 +25,12 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/formslib.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 admin_externalpage_setup('toolerdiagram');
 
-require_once($CFG->libdir . '/adminlib.php');
 $PAGE->set_context(context_system::instance());
-
 $PAGE->set_url('/admin/sqlgenerator.php');
-$markup = optional_param('markup', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
@@ -48,34 +45,10 @@ if ($data = $mform->get_data()) {
             $options['fieldnames'] = $data->fieldnames;
             $diagram = new tool_erdiagram\diagram();
             $output = $diagram->process_file($installxml, $options);
-            echo <<<EOF
-<script type='module'>
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-mermaid.initialize({ startOnLoad: true });
-</script>
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="diagram-tab" data-toggle="tab" href="#diagram"
-        role="tab" aria-controls="diagram" aria-selected="true">Diagram</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="source-tab" data-toggle="tab" href="#source"
-        role="tab" aria-controls="source" aria-selected="false">Source</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="diagram" role="tabpanel" aria-labelledby="diagram-tab">
-<pre class='mermaid'>
-$output
-</pre>
-  </div>
-  <div class="tab-pane fade"             id="source" role="tabpanel" aria-labelledby="source-tab">
-<pre>
-$output
-</pre>
-  </div>
-</div>
-EOF;
+
+            $data = new stdClass();
+            $data->source = $output;
+            echo $OUTPUT->render_from_template('tool_erdiagram/tabs', $data);
 
         } else {
             $msg = 'File not found';
