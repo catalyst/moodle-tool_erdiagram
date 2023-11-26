@@ -42,7 +42,7 @@ class diagram {
 digraph g {
 
     fontname="Helvetica,Arial,sans-serif"
-    nodesep=1
+    nodesep=0.4
     node [
         shape=record,
         fontsize=9,
