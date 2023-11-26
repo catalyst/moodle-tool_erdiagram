@@ -50,6 +50,7 @@ digraph g {
     ];
     edge [
         fontname="Helvetica,Arial,sans-serif",
+        minlen=3
     ]
     graph [
         rankdir=LR,
@@ -85,11 +86,11 @@ EOF;
                     $fieldtype = $this->get_field_type($field->getType());
                     $fieldname = $field->getName();
                     $fields .=
-                        sprintf("            <tr><td %-30s align=\"left\">%-10s</td><td %-31s align=\"left\">%-26s</td></tr>\n",
+                        sprintf("            <tr><td %-30s align=\"left\">%-10s<td %-31s align=\"left\">%-26s</tr>\n",
                         "port=\"in$fieldname\"",
-                        $fieldtype,
+                        $fieldtype . '</td>',
                         "port=\"out$fieldname\"",
-                        $fieldname);
+                        $fieldname . '</td>');
 
                 }
             }
@@ -121,6 +122,7 @@ EOF;
                     if (in_array($reftable, $componenttables) ) {
                         if ($options['fieldnames']) {
                             if ($tablename == $reftable) {
+                                // Tune the rendering of self referencing links.
                                 $output .= "    $tablename:in{$fields[0]}:w -> $reftable:in{$reffields[0]}:w [minlen=1];\n";
                             } else {
                                 $output .= "    $tablename:out{$fields[0]} -> $reftable:in{$reffields[0]};\n";
