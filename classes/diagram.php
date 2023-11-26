@@ -39,7 +39,7 @@ class diagram {
     public function process_file (string $installxml, array $options) {
 
         $output = <<<EOF
-digraph g {
+digraph component {
 
     fontname="Helvetica,Arial,sans-serif"
     nodesep=0.4
@@ -68,6 +68,7 @@ EOF;
         $xmldbstructure = $xmldbfile->getStructure();
         $tables = $xmldbstructure->getTables();
 
+        $tablelinks = []; // Which fields in tables have explicit references?
         $externaltables = [];
         $componenttables = [];
         foreach ($tables as $table) {
@@ -117,9 +118,10 @@ EOF;
                 $fields = $fkey->getFields();
                 $reffields = $fkey->getReffields();
                 if (!empty($reffields) && count($reffields) > 0) {
+                    $tablelinks[] = "$tablename:{$fields[0]}";
 
-                    // Only show the link if the referenced table is also in the diagram.
                     if (in_array($reftable, $componenttables) ) {
+                        // Show a column link if the referenced table is also in the diagram.
                         if ($options['fieldnames']) {
                             if ($tablename == $reftable) {
                                 // Tune the rendering of self referencing links.
@@ -131,6 +133,7 @@ EOF;
                             $output .= "    $tablename -> $reftable;\n";
                         }
                     } else {
+                        // Otherwise just link to an external table with no columns.
                         $externaltables[$reftable] = 1;
                         if ($options['fieldnames']) {
                             $output .= "    $tablename:out{$fields[0]} -> $reftable;\n";
@@ -138,6 +141,35 @@ EOF;
                             $output .= "    $tablename -> $reftable;\n";
                         }
                     }
+                }
+            }
+
+            // Now lets detect fields which look like they should have links but do not.
+            // These columns must:
+            // * Be an int column
+            // * Have a name which matches another table exactly
+            // * Or match another table with the 'id' suffix
+            foreach ($table->getFields() as $field) {
+
+                $fieldtype = $this->get_field_type($field->getType());
+                $fieldname = $field->getName();
+                $reftable = '';
+
+                if (in_array("$tablename:{$fields[0]}", $tablelinks)) {
+                    // This column has an explicit reference already.
+                    continue;
+                }
+
+                if (!empty($componenttables[$fieldname])) {
+                    $reftable = $fieldname;
+                } elseif ($fieldname !== 'id' && substr($fieldname, -2) == 'id') {
+                    if (in_array(substr($fieldname, 0, -2), $componenttables)) {
+                        $reftable = substr($fieldname, 0, -2);
+                    }
+                }
+
+                if ($reftable) {
+                    $output .= "    $tablename:out$fieldname -> $reftable:inid[label=\"implied\", style=\"dotted\", fontsize=9];\n";
                 }
             }
         }
