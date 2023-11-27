@@ -24,3 +24,5 @@ https://mermaid.js.org/
 https://github.com/mermaid-js/mermaid
 
 https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams
+
+A full documentation of the Moodle database can be found at https://www.examulator.com/er/output/index.html

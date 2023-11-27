@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/adminlib.php');
 admin_externalpage_setup('toolerdiagram');
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_url('/admin/sqlgenerator.php');
+$PAGE->set_url('/admin/tool/erdiagram');
 
 echo $OUTPUT->header();
 
