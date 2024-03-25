@@ -13,6 +13,10 @@ The form allows entry of the path to a plugin e.g. mod/label.
 The db/install.xml file will be opened and the xml converted to mermaid markdown.
 There is a checkbox to allow inclusion of Fields, type and comment for a more detailed/cluttered view.
 
+Example for mod/wiki
+
+![image](https://github.com/catalyst/moodle-tool_erdiagram/assets/187449/06b2a83e-7ecb-414c-91bf-d39d37505b3c)
+
 A preview is displayed and the markup can be copied for further viewing and manipulation at
 
 https://mermaid.live/
